@@ -5510,6 +5510,14 @@ async function executeBroadcast(ctx, type, inputText, replyMessage = null) {
             messageText,
             options
           );
+
+          // Jangan auto-hapus broadcast (permintaan Wendi 2026-10-11)
+          try {
+            const ppobMod = bot.__ripzzPPOBModule;
+            if (ppobMod?.protectMessage && sent?.message_id) {
+              ppobMod.protectMessage(row.user_id, sent.message_id);
+            }
+          } catch (e) {}
         }
 
         // ====================================================

@@ -95,6 +95,9 @@ module.exports = {
   channelId:
     env('TRX_CHANNEL_ID'),
 
+  groupId:
+    env('GROUP_CHAT_ID'),
+
   tz:
     env('TZ', 'Asia/Jakarta'),
 

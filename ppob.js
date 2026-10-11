@@ -327,6 +327,16 @@ function nav(...buttons) {
     }
   }
 
+  // Notif ke grup seperti notif pembelian VPN (permintaan Wendi 2026-10-11)
+  async function notifyGroup(text) {
+    if (!config.groupId) return;
+    try {
+      await bot.telegram.sendMessage(config.groupId, text, { parse_mode: 'HTML' });
+    } catch (e) {
+      console.error('group:', e.message);
+    }
+  }
+
   function specText(p) {
     const s = digi.destinationSpec(p.category, p.brand);
     return `${esc(s.label)} — contoh: <code>${esc(s.placeholder)}</code>`;
@@ -1073,6 +1083,17 @@ await notify(
 
 <i>Terima kasih telah menggunakan layanan ${esc(storeName)}.</i>`
 );
+
+// Notif ke grup (permintaan Wendi 2026-10-11)
+await notifyGroup(
+  `<b>✅ PPOB BERHASIL</b>\n\n` +
+  `📦 Produk : <b>${esc(tx.productName)}</b>\n` +
+  `📱 Tujuan : <code>${esc(tx.customerNo)}</code>\n` +
+  `💰 Nominal : <b>${rp(tx.amount)}</b>\n` +
+  `👤 User : ${esc(tx.userName)} (<code>${esc(String(tx.userId))}</code>)\n` +
+  `🆔 Order : <code>${esc(tx.id)}</code>\n` +
+  `🔐 SN : <code>${esc(r.sn || '-')}</code>`
+);
 }
   async function refundFailed(tx, msg) {
     if (!tx) return;
@@ -1130,6 +1151,18 @@ await notify(
 
 <i>Silakan hubungi admin jika diperlukan.</i>`
 );
+
+// Notif ke grup (permintaan Wendi 2026-10-11)
+await notifyGroup(
+  `<b>❌ PPOB GAGAL</b>\n\n` +
+  `📦 Produk : <b>${esc(t.productName)}</b>\n` +
+  `📱 Tujuan : <code>${esc(t.customerNo || '-')}</code>\n` +
+  `💰 Nominal : <b>${rp(t.amount)}</b>\n` +
+  `👤 User : ${esc(t.userName)} (<code>${esc(String(t.userId))}</code>)\n` +
+  `🆔 Order : <code>${esc(t.id)}</code>\n` +
+  `💬 Pesan : ${esc(msg || '-')}\n` +
+  `${t.refunded ? '💰 Dana dikembalikan ke saldo.' : ''}`
+);
   }
 
   async function checkPayment(tx) {
@@ -1176,6 +1209,15 @@ await notify(
 <b>🆔 Order ID</b> : <code>${esc(tx.id)}</code>
 <b>📌 Status</b> : <b>SUCCESS ✅</b>
 <b>💰 Saldo Baru</b> : <b>${rp(bal)}</b>`
+);
+
+// Notif top-up ke grup (permintaan Wendi 2026-10-11)
+await notifyGroup(
+  `<b>💰 TOP-UP BERHASIL</b>\n\n` +
+  `💵 Nominal : <b>${rp(tx.amount)}</b>\n` +
+  `👤 User : ${esc(tx.userName)} (<code>${esc(String(tx.userId))}</code>)\n` +
+  `🆔 Order : <code>${esc(tx.id)}</code>\n` +
+  `💰 Saldo Baru : <b>${rp(bal)}</b>`
 );
 
           return true;
@@ -1919,6 +1961,11 @@ return await ctx.replyWithDocument(
     await c.answerCbQuery();
     return sendHome(c);
   });
+  // Handler untuk tombol "🏠 MENU PPOB" (bug: sebelumnya tidak ada - 2026-10-11)
+  bot.action('ppobmenu', async c => {
+    await c.answerCbQuery();
+    return sendHome(c);
+  });
   bot.action('ppob', async c => {
     await c.answerCbQuery();
     return showCats(c, 'prepaid');
@@ -2287,7 +2334,9 @@ return await c.replyWithDocument(
     sessions,
     locks,
     loading,
-    verifyRequiredChannel
+    verifyRequiredChannel,
+    protectMessage,
+    unprotectMessage
   };
 
   bot.__ripzzPPOBModule = api;
