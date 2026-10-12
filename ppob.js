@@ -1086,7 +1086,7 @@ await notify(
 
 // Notif ke grup (permintaan Wendi 2026-10-11)
 await notifyGroup(
-  `✅ <b>PPOB Berhasil</b>\n` +
+  `<blockquote>✅ <b>PPOB Berhasil</b>\n` +
   `━━━━━━━━━━━━━━━━━━\n` +
   `📦 Produk: <b>${esc(tx.productName)}</b>\n` +
   `📱 Tujuan: <code>${esc(tx.customerNo)}</code>\n` +
@@ -1095,7 +1095,7 @@ await notifyGroup(
   `🆔 ID: <code>${esc(String(tx.userId))}</code>\n` +
   `🧾 Ref: <code>${esc(tx.id)}</code>\n` +
   `🔐 SN: <code>${esc(r.sn || '-')}</code>\n` +
-  `━━━━━━━━━━━━━━━━━━`
+  `━━━━━━━━━━━━━━━━━━</blockquote>`
 );
 }
   async function refundFailed(tx, msg) {
@@ -1157,7 +1157,7 @@ await notify(
 
 // Notif ke grup (permintaan Wendi 2026-10-11)
 await notifyGroup(
-  `❌ <b>PPOB Gagal</b>\n` +
+  `<blockquote>❌ <b>PPOB Gagal</b>\n` +
   `━━━━━━━━━━━━━━━━━━\n` +
   `📦 Produk: <b>${esc(t.productName)}</b>\n` +
   `📱 Tujuan: <code>${esc(t.customerNo || '-')}</code>\n` +
@@ -1167,7 +1167,7 @@ await notifyGroup(
   `🧾 Ref: <code>${esc(t.id)}</code>\n` +
   `💬 Ket: ${esc(msg || '-')}` +
   `${t.refunded ? '\n💰 Dana dikembalikan ke saldo.' : ''}\n` +
-  `━━━━━━━━━━━━━━━━━━`
+  `━━━━━━━━━━━━━━━━━━</blockquote>`
 );
   }
 
