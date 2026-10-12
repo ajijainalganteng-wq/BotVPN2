@@ -56,10 +56,11 @@ const csv = s =>
     .map(x => x.trim())
     .filter(Boolean);
 
-const num = (v, d) =>
-  Number.isFinite(Number(v))
-    ? Number(v)
-    : d;
+const num = (v, d) => {
+  if (v === '' || v === null || v === undefined) return d;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : d;
+};
 
 // =========================================================
 // CONFIG
