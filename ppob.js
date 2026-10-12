@@ -1098,7 +1098,8 @@ await notifyGroup(
   async function refundFailed(tx, msg) {
     if (!tx) return;
 
-    const refundable = ['SALDO', 'QRIS'].includes(String(tx.paymentMethod || '').toUpperCase());
+    // Semua metode pembayaran bisa di-refund (perintah Wendi 2026-10-13)
+    const refundable = true;
 
     if (!tx.refunded && refundable) {
       const bal = db.addBalance(tx.userId, tx.amount);
