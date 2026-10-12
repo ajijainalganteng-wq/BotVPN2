@@ -1086,13 +1086,16 @@ await notify(
 
 // Notif ke grup (permintaan Wendi 2026-10-11)
 await notifyGroup(
-  `<b>✅ PPOB BERHASIL</b>\n\n` +
-  `📦 Produk : <b>${esc(tx.productName)}</b>\n` +
-  `📱 Tujuan : <code>${esc(tx.customerNo)}</code>\n` +
-  `💰 Nominal : <b>${rp(tx.amount)}</b>\n` +
-  `👤 User : ${esc(tx.userName)} (<code>${esc(String(tx.userId))}</code>)\n` +
-  `🆔 Order : <code>${esc(tx.id)}</code>\n` +
-  `🔐 SN : <code>${esc(r.sn || '-')}</code>`
+  `✅ <b>PPOB Berhasil</b>\n` +
+  `━━━━━━━━━━━━━━━━━━\n` +
+  `📦 Produk: <b>${esc(tx.productName)}</b>\n` +
+  `📱 Tujuan: <code>${esc(tx.customerNo)}</code>\n` +
+  `💰 Nominal: <b>${rp(tx.amount)}</b>\n` +
+  `👤 User: ${esc(tx.userName)}\n` +
+  `🆔 ID: <code>${esc(String(tx.userId))}</code>\n` +
+  `🧾 Ref: <code>${esc(tx.id)}</code>\n` +
+  `🔐 SN: <code>${esc(r.sn || '-')}</code>\n` +
+  `━━━━━━━━━━━━━━━━━━`
 );
 }
   async function refundFailed(tx, msg) {
@@ -1154,14 +1157,17 @@ await notify(
 
 // Notif ke grup (permintaan Wendi 2026-10-11)
 await notifyGroup(
-  `<b>❌ PPOB GAGAL</b>\n\n` +
-  `📦 Produk : <b>${esc(t.productName)}</b>\n` +
-  `📱 Tujuan : <code>${esc(t.customerNo || '-')}</code>\n` +
-  `💰 Nominal : <b>${rp(t.amount)}</b>\n` +
-  `👤 User : ${esc(t.userName)} (<code>${esc(String(t.userId))}</code>)\n` +
-  `🆔 Order : <code>${esc(t.id)}</code>\n` +
-  `💬 Pesan : ${esc(msg || '-')}\n` +
-  `${t.refunded ? '💰 Dana dikembalikan ke saldo.' : ''}`
+  `❌ <b>PPOB Gagal</b>\n` +
+  `━━━━━━━━━━━━━━━━━━\n` +
+  `📦 Produk: <b>${esc(t.productName)}</b>\n` +
+  `📱 Tujuan: <code>${esc(t.customerNo || '-')}</code>\n` +
+  `💰 Nominal: <b>${rp(t.amount)}</b>\n` +
+  `👤 User: ${esc(t.userName)}\n` +
+  `🆔 ID: <code>${esc(String(t.userId))}</code>\n` +
+  `🧾 Ref: <code>${esc(t.id)}</code>\n` +
+  `💬 Ket: ${esc(msg || '-')}` +
+  `${t.refunded ? '\n💰 Dana dikembalikan ke saldo.' : ''}\n` +
+  `━━━━━━━━━━━━━━━━━━`
 );
   }
 

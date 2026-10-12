@@ -14697,19 +14697,13 @@ if (deposit.qrMessageId) {
   const { keyGroup, chatId } = group;
 
   const messageToGroup =
-`╭──────────────╮
-   📦 TOP UP BERHASIL 📦
-╰──────────────╯
-\`\`\`
-🏷️ Username        : @${username}
-🆔 ID              : ${userId}
-💰 Nominal Top Up  : Rp${topupAmount.toLocaleString('id-ID')}
-${bonusLine}💳 Saldo Sekarang  : Rp${balanceAmount.toLocaleString('id-ID')}
-\`\`\`
-
-━━━━━━━━━━━━━━
-✨ Terima kasih sudah melakukan Top Up ✨
-━━━━━━━━━━━━━━`;
+`✅ Top Up Berhasil
+━━━━━━━━━━━━━━━━━━
+👤 User: @${username}
+🆔 ID: ${userId}
+💰 Nominal: Rp${topupAmount.toLocaleString('id-ID')}
+${bonusLine}✅ Saldo Akhir: Rp${balanceAmount.toLocaleString('id-ID')}
+━━━━━━━━━━━━━━━━━━`;
 
   try {
     const image = await generateTopupSuccessTemplate({
