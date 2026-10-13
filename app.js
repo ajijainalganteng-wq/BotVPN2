@@ -1,4 +1,28 @@
 // ============================================================
+// 🛡️ SINGLE-INSTANCE GUARD (2026-10-13)
+// PM2 adalah pemilik sah bot ini. Instance yang jalan via PM2
+// membunuh instance liar (hasil start manual/nohup) saat start,
+// agar tidak rebutan token Telegram (409 Conflict).
+// Instance manual yang menemukan port Express sudah dipakai
+// akan keluar sendiri (lihat handler EADDRINUSE di bawah).
+// ============================================================
+if (process.env.pm_id !== undefined) {
+  try {
+    const { execSync } = require('child_process');
+    const lines = execSync('ps -eo pid,args 2>/dev/null').toString().split('\n');
+    for (const ln of lines) {
+      const m = ln.trim().match(/^(\d+)\s+.*node\s+\/root\/BotVPN2\/app\.js/);
+      if (m) {
+        const pid = parseInt(m[1], 10);
+        if (pid && pid !== process.pid) {
+          try { process.kill(pid, 'SIGKILL'); } catch (e) {}
+        }
+      }
+    }
+  } catch (e) {}
+}
+
+// ============================================================
 // 📦 IMPORT MODULE / DEPENDENCIES
 // ============================================================
 
