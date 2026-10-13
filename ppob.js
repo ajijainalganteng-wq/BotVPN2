@@ -335,7 +335,7 @@ function nav(...buttons) {
   async function notifyGroup(text) {
     if (!config.groupId) return;
     try {
-      const m = await bot.telegram.sendMessage(config.groupId, text, { parse_mode: 'HTML' });
+      const m = await bot.telegram.sendMessage(config.groupId, text, { parse_mode: "Markdown" });
       if (m?.message_id) protectMessage(config.groupId, m.message_id);
     } catch (e) {
       console.error('group:', e.message);
@@ -1092,12 +1092,12 @@ await notify(
 // Notif ke grup (permintaan Wendi 2026-10-11)
 await notifyGroup(
   `✅ PPOB BERHASIL\n\n` +
-  "<pre>" +
-  `📱 Tujuan : ${esc(tx.customerNo)}\n` +
+  "```\n" +
+  `📱 Tujuan : ${tx.customerNo}\n` +
   `💰 Nominal : ${rp(tx.amount)}\n` +
-  `👤 User : @${esc(tx.userName)} (${esc(String(tx.userId))})\n` +
-  `🆔 Order : ${esc(tx.id)}\n` +
-  `🔐 SN : ${esc(r.sn || '-')}` + "</pre>"
+  `👤 User : @${tx.userName} (${String(tx.userId)})\n` +
+  `🆔 Order : ${tx.id}\n` +
+  `🔐 SN : ${r.sn || '-'}` + "\n```"
 );
 }
   async function refundFailed(tx, msg) {
@@ -1161,13 +1161,13 @@ await notify(
 // Notif ke grup (permintaan Wendi 2026-10-11)
 await notifyGroup(
   `❌ PPOB GAGAL\n\n` +
-  "<pre>" +
-  `📱 Tujuan : ${esc(t.customerNo || '-')}\n` +
+  "```\n" +
+  `📱 Tujuan : ${t.customerNo || '-'}\n` +
   `💰 Nominal : ${rp(t.amount)}\n` +
-  `👤 User : @${esc(t.userName)} (${esc(String(t.userId))})\n` +
-  `🆔 Order : ${esc(t.id)}\n` +
-  `💬 Ket : ${esc(msg || '-')}` +
-  `${t.refunded ? '\n💰 Dana dikembalikan ke saldo.' : ''}` + "</pre>"
+  `👤 User : @${t.userName} (${String(t.userId)})\n` +
+  `🆔 Order : ${t.id}\n` +
+  `💬 Ket : ${msg || '-'}` +
+  `${t.refunded ? '\n💰 Dana dikembalikan ke saldo.' : ''}` + "\n```"
 );
   }
 
@@ -1219,11 +1219,12 @@ await notify(
 
 // Notif top-up ke grup (permintaan Wendi 2026-10-11)
 await notifyGroup(
-  `<b>💰 TOP-UP BERHASIL</b>\n\n` +
-  `💵 Nominal : <b>${rp(tx.amount)}</b>\n` +
-  `👤 User : ${esc(tx.userName)} (<code>${esc(String(tx.userId))}</code>)\n` +
-  `🆔 Order : <code>${esc(tx.id)}</code>\n` +
-  `💰 Saldo Baru : <b>${rp(bal)}</b>`
+  `💰 TOP-UP BERHASIL\n\n` +
+  "```\n" +
+  `💵 Nominal : ${rp(tx.amount)}\n` +
+  `👤 User : ${tx.userName} (${tx.userId})\n` +
+  `🆔 Order : ${tx.id}\n` +
+  `💰 Saldo Baru : ${rp(bal)}` + "\n```"
 );
 
           return true;

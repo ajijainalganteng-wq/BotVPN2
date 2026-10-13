@@ -14453,7 +14453,7 @@ async function sendTransactionLogToGroup({
     await axios.post(`https://api.telegram.org/bot${groupData.keyGroup}/sendMessage`, {
       chat_id: groupData.chatId,
       text: message,
-      parse_mode: 'MarkdownV2'
+      parse_mode: 'Markdown'
     });
     logger.info(`✅ Log transaksi #${trxNumber} dikirim ke grup ${groupData.chatId}`);
   } catch (err) {
