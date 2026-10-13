@@ -15907,6 +15907,13 @@ app.listen(port)
       }`
     );
 
+    // 2026-10-13: port dipakai = instance bot lain sedang jalan.
+    // Keluar agar tidak rebutan token Telegram (409 Conflict) — keluhan Aji bot dobel.
+    if (err?.code === 'EADDRINUSE') {
+      logger.error('⛔ Port sudah dipakai instance lain — keluar untuk mencegah bot ganda.');
+      setTimeout(() => process.exit(1), 500);
+    }
+
   });
 
 
