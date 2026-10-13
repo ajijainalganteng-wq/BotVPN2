@@ -298,9 +298,12 @@ function nav(...buttons) {
     }
   }
 
+  // 2026-10-13: diprotect agar benar-benar persistent (keluhan Aji: notif terhapus otomatis)
   async function sendPersistent(chatId, text, extra = {}) {
     try {
-      return await bot.telegram.sendMessage(chatId, text, extra);
+      const m = await bot.telegram.sendMessage(chatId, text, extra);
+      if (m?.message_id) protectMessage(chatId, m.message_id);
+      return m;
     } catch {
       return null;
     }
@@ -328,10 +331,12 @@ function nav(...buttons) {
   }
 
   // Notif ke grup seperti notif pembelian VPN (permintaan Wendi 2026-10-11)
+  // 2026-10-13: notif grup diprotect agar tidak ikut auto-hapus 60 dtk (keluhan Aji)
   async function notifyGroup(text) {
     if (!config.groupId) return;
     try {
-      await bot.telegram.sendMessage(config.groupId, text, { parse_mode: 'HTML' });
+      const m = await bot.telegram.sendMessage(config.groupId, text, { parse_mode: 'HTML' });
+      if (m?.message_id) protectMessage(config.groupId, m.message_id);
     } catch (e) {
       console.error('group:', e.message);
     }
@@ -1087,12 +1092,12 @@ await notify(
 // Notif ke grup (permintaan Wendi 2026-10-11)
 await notifyGroup(
   `✅ PPOB BERHASIL\n\n` +
-  "```\n" +
+  "<pre>" +
   `📱 Tujuan : ${esc(tx.customerNo)}\n` +
   `💰 Nominal : ${rp(tx.amount)}\n` +
   `👤 User : @${esc(tx.userName)} (${esc(String(tx.userId))})\n` +
   `🆔 Order : ${esc(tx.id)}\n` +
-  `🔐 SN : ${esc(r.sn || '-')}` + "\n```"
+  `🔐 SN : ${esc(r.sn || '-')}` + "</pre>"
 );
 }
   async function refundFailed(tx, msg) {
@@ -1156,13 +1161,13 @@ await notify(
 // Notif ke grup (permintaan Wendi 2026-10-11)
 await notifyGroup(
   `❌ PPOB GAGAL\n\n` +
-  "```\n" +
+  "<pre>" +
   `📱 Tujuan : ${esc(t.customerNo || '-')}\n` +
   `💰 Nominal : ${rp(t.amount)}\n` +
   `👤 User : @${esc(t.userName)} (${esc(String(t.userId))})\n` +
   `🆔 Order : ${esc(t.id)}\n` +
   `💬 Ket : ${esc(msg || '-')}` +
-  `${t.refunded ? '\n💰 Dana dikembalikan ke saldo.' : ''}` + "\n```"
+  `${t.refunded ? '\n💰 Dana dikembalikan ke saldo.' : ''}` + "</pre>"
 );
   }
 
