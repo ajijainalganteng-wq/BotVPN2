@@ -230,7 +230,11 @@ async function transaction({
     }
   );
 
-  return result?.data;
+  const d = result?.data;
+  if (d && d.status && d.status !== 'Sukses' && d.rc !== '00' && d.rc !== '0000') {
+    throw new Error(`Digiflazz gagal: ${d.status} rc=${d.rc} ${d.message || ''}`);
+  }
+  return d;
 }
 
 
