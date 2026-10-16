@@ -39,7 +39,7 @@ function cfApi(server, path, params = {}) {
 }
 
 function validUsername(username) {
-  return typeof username === 'string' && /^[a-zA-Z0-9]{3,20}$/.test(username);
+  return typeof username === 'string' && /^[a-zA-Z0-9-]{3,30}$/.test(username);
 }
 
 // ---------------------------------------------------------------------------

@@ -20,9 +20,9 @@ async function renewssh(username, exp, limitip, serverId) {
 
       const domain = server.domain;
       const auth = server.auth;
-      const param = `:5888/renewssh?user=${username}&exp=${exp}&iplimit=${limitip}&auth=${auth}`;
+      const param = `:5888/renewssh?user=${username}&exp=${encodeURIComponent(exp)}&iplimit=${limitip}&auth=${auth}`;
       const url = `http://${domain}${param}`;
-      axios.get(url)
+      axios.get(url, { timeout: 15000 })
         .then(response => {
           if (response.data.status === "success") {
             const sshData = response.data.data;
@@ -82,9 +82,9 @@ async function renewvmess(username, exp, quota, limitip, serverId) {
   
         const domain = server.domain;
         const auth = server.auth;
-        const param = `:5888/renewvmess?user=${username}&exp=${exp}&quota=${quota}&iplimit=${limitip}&auth=${auth}`;
+        const param = `:5888/renewvmess?user=${username}&exp=${encodeURIComponent(exp)}&quota=${encodeURIComponent(quota)}&iplimit=${limitip}&auth=${auth}`;
         const url = `http://${domain}${param}`;
-        axios.get(url)
+        axios.get(url, { timeout: 15000 })
           .then(response => {
             if (response.data.status === "success") {
               const vmessData = response.data.data;
@@ -143,9 +143,9 @@ async function renewvmess(username, exp, quota, limitip, serverId) {
   
         const domain = server.domain;
         const auth = server.auth;
-        const param = `:5888/renewvless?user=${username}&exp=${exp}&quota=${quota}&iplimit=${limitip}&auth=${auth}`;
+        const param = `:5888/renewvless?user=${username}&exp=${encodeURIComponent(exp)}&quota=${encodeURIComponent(quota)}&iplimit=${limitip}&auth=${auth}`;
         const url = `http://${domain}${param}`;
-        axios.get(url)
+        axios.get(url, { timeout: 15000 })
           .then(response => {
             if (response.data.status === "success") {
               const vlessData = response.data.data;
@@ -205,9 +205,9 @@ async function renewvmess(username, exp, quota, limitip, serverId) {
   
         const domain = server.domain;
         const auth = server.auth;
-        const param = `:5888/renewtrojan?user=${username}&exp=${exp}&quota=${quota}&iplimit=${limitip}&auth=${auth}`;
+        const param = `:5888/renewtrojan?user=${username}&exp=${encodeURIComponent(exp)}&quota=${encodeURIComponent(quota)}&iplimit=${limitip}&auth=${auth}`;
         const url = `http://${domain}${param}`;
-        axios.get(url)
+        axios.get(url, { timeout: 15000 })
           .then(response => {
             if (response.data.status === "success") {
               const trojanData = response.data.data;
@@ -267,9 +267,9 @@ async function renewvmess(username, exp, quota, limitip, serverId) {
   
         const domain = server.domain;
         const auth = server.auth;
-        const param = `:5888/renewshadowsocks?user=${username}&exp=${exp}&quota=${quota}&iplimit=${limitip}&auth=${auth}`;
+        const param = `:5888/renewshadowsocks?user=${username}&exp=${encodeURIComponent(exp)}&quota=${encodeURIComponent(quota)}&iplimit=${limitip}&auth=${auth}`;
         const url = `http://${domain}${param}`;
-        axios.get(url)
+        axios.get(url, { timeout: 15000 })
           .then(response => {
             if (response.data.status === "success") {
               const shadowsocksData = response.data.data;

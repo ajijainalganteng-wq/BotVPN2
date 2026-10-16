@@ -191,35 +191,6 @@ async function balance() {
   );
 }
 
-async function balance() {
-  if (!enabled()) {
-    throw new Error(
-      'DIGIFLAZZ_USERNAME / DIGIFLAZZ_API_KEY belum diisi di .vars.json'
-    );
-  }
-
-  const signature = sign('depo');
-
-  console.log('🔐 DIGIFLAZZ CEK SALDO');
-  console.log('Username:', USERNAME);
-  console.log('API Key length:', API_KEY.length);
-  console.log('Signature:', signature);
-
-  const result = await post('/cek-saldo', {
-    cmd: 'deposit',
-    username: USERNAME,
-    sign: signature
-  });
-
-  if (result?.data) {
-    return result.data;
-  }
-
-  throw new Error(
-    result?.message ||
-    'Gagal mengambil saldo supplier Digiflazz'
-  );
-}
 // ============================================================
 // TRANSAKSI
 // ============================================================

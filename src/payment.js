@@ -180,24 +180,7 @@ function paid(data) {
     data?.result
   ];
 
-  const successStatuses = [
-    'success',
-    'paid',
-    'settlement',
-    'settled',
-    'completed',
-    'complete',
-    'done',
-    'sukses',
-    'berhasil',
-    'lunas',
-    'capture',
-    'accepted',
-    'confirmed',
-    'terbayar',
-    '1',
-    'true'
-  ];
+  const successStatuses = ['paid', 'success', 'settlement', 'PAID', 'SUCCESS'];;
 
   for (const layer of layers) {
 

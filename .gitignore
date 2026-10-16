@@ -1,0 +1,10 @@
+
+# secrets & data (auto-added)
+.vars.json
+data/
+backup/
+*.db
+bot-*.log
+node_modules/
+*.tmp
+app.js.bak-*

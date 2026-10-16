@@ -74,7 +74,7 @@ const ADMIN_WA = vars.ADMIN_WA;
 const GROUP_USERNAME = vars.GROUP_USERNAME;
 
 const bot = new Telegraf(BOT_TOKEN);
-const adminIds = ADMIN;
+const adminIds = String(ADMIN).split(',').map(s => s.trim()).filter(Boolean);
 logger.info('Bot initialized');
 
 const db = new sqlite3.Database('./sellvpn.db', (err) => {
@@ -6085,6 +6085,7 @@ async function downgradeInactiveResellers() {
 
 
 process.on('uncaughtException', (err) => {
+  console.error('[FATAL] uncaughtException — keluar agar PM2 restart bersih');
   console.error('🔥 Uncaught Exception:', err);
 });
 

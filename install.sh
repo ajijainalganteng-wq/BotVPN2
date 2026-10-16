@@ -5,7 +5,7 @@
 #   bash <(curl -sL https://raw.githubusercontent.com/ajijainalganteng-wq/BotVPN2/main/install.sh)
 # Script ini memastikan hanya 1 instance bot yang jalan (via PM2).
 # ============================================================
-set -u
+set -euo pipefail
 
 REPO="https://github.com/ajijainalganteng-wq/BotVPN2.git"
 DIR="/root/BotVPN2"
@@ -13,6 +13,8 @@ PMNAME="ripzz-store-ppob"
 
 echo "==> 1/5 Matikan SEMUA instance bot lama (agar tidak tumpang tindih)..."
 pm2 delete "$PMNAME" 2>/dev/null
+systemctl stop sellvpn.service 2>/dev/null || true
+systemctl disable sellvpn.service 2>/dev/null || true
 pkill -f "[n]ode $DIR/app.js" 2>/dev/null
 sleep 2
 
@@ -31,6 +33,8 @@ echo "==> 4/5 Install dependencies..."
 cd "$DIR" && npm install --omit=dev --no-audit --no-fund 2>&1 | tail -1
 
 echo "==> 5/5 Jalankan 1 instance via PM2..."
+[ -f "$DIR/app.js" ] || { echo "ERROR: app.js tidak ada di $DIR"; exit 1; }
+chmod 600 "$DIR/.vars.json" 2>/dev/null || true
 pm2 start "$DIR/app.js" --name "$PMNAME"
 pm2 save >/dev/null 2>&1
 

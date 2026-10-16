@@ -12,6 +12,13 @@ white="\033[1;97m"
 pink="\e[38;5;205m"
 
 hapus_bot_lama() {
+    if [ "$1" != "--yes" ]; then
+        echo -e "${yellow}INI AKAN MENGHAPUS /root/BotVPN dan /root/BotVPN2 beserta data & config.${NC}"
+        read -p "Ketik 'HAPUS' untuk lanjut: " c
+        [ "$c" = "HAPUS" ] || { echo "Batal."; return 1; }
+    fi
+    # backup .vars.json (kredensial) sebelum hapus
+    [ -f /root/BotVPN2/.vars.json ] && cp /root/BotVPN2/.vars.json /root/.vars.json.backup-$(date +%s)
     echo -e "${orange}Menghapus bot lama...${NC}"
     systemctl stop sellvpn.service 2>/dev/null
     systemctl disable sellvpn.service 2>/dev/null

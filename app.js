@@ -2134,8 +2134,8 @@ async function cekKuotaSidompul(msisdn) {
 
     const response = await axios.get(url, {
       headers: {
-        'Authorization': 'Basic c2lkb21wdWxhcGk6YXBpZ3drbXNw',
-        'X-API-Key': '60ef29aa-a648-4668-90ae-20951ef90c55',
+        'Authorization': 'Basic ' + Buffer.from(`${process.env.SIDOMPUL_USER||''}:${process.env.SIDOMPUL_PASS||''}`).toString('base64'),
+        'X-API-Key': process.env.KMSP_API_KEY || '',
         'X-App-Version': '4.0.0'
       },
       timeout: 30000
@@ -2354,8 +2354,7 @@ bot.action(
 // 👑 ADMIN CONFIGURATION
 // ============================================================
 
-const adminIds =
-    ADMIN;
+const adminIds = String(ADMIN).split(',').map(s => s.trim()).filter(Boolean);
 
 
 // ============================================================
@@ -2647,7 +2646,8 @@ db.run(`
         status TEXT,
         qr_message_id INTEGER,
         method TEXT,
-        payment_ref TEXT
+        payment_ref TEXT,
+        total_payment INTEGER
     )
 `, (err) => {
 
@@ -2696,6 +2696,7 @@ db.run(
 
 db.run(
     `ALTER TABLE pending_deposits ADD COLUMN payment_ref TEXT`,
+    `ALTER TABLE pending_deposits ADD COLUMN total_payment INTEGER`,
     (err) => {
 
         if (err && !err.message.includes('duplicate column name')) {
@@ -12460,7 +12461,10 @@ db.all('SELECT * FROM pending_deposits WHERE status = "pending"', [], (err, rows
       method: row.method || 'QRIS Orkut',
 
       // ✅ Referensi transaksi PayOtomatis
-      payment_ref: row.payment_ref || null
+      payment_ref: row.payment_ref || null,
+
+      // ✅ Total yang harus dibayar (amount + fee)
+      total_payment: row.total_payment || row.amount
     };
   });
 
@@ -12662,15 +12666,15 @@ async function processDeposit(ctx, amount) {
     return ctx.reply("⚠️ Kamu masih punya transaksi deposit yang belum selesai!");
   }
 
-  if (currentTime - lastRequestTime < requestInterval) {
+  if (currentTime - (global.userRequestTime?.[ctx.from?.id] || 0) < requestInterval) {
     return ctx.reply(
       '⚠️ *Terlalu banyak permintaan. Silahkan tunggu sebentar sebelum mencoba lagi.*',
       { parse_mode: 'Markdown' }
     );
   }
-  lastRequestTime = currentTime;
+  (global.userRequestTime = global.userRequestTime || {})[ctx.from?.id] = currentTime;
 
-  const uniqueCode = `ORKUT-${userId}-✅`;
+  const uniqueCode = `ORKUT-${userId}-${Date.now()}`;
   const finalAmount = generateRandomAmount(parseInt(amount));
   global.pendingDeposits ??= {};
   global.depositState[userId] = true;
@@ -12823,7 +12827,7 @@ const qrMessage = await ctx.replyWithPhoto(
       uniqueCode,
       userId,
       ctx.from.username || `user_${userId}`,
-      nominal,
+      finalAmount,
       nominal,
       qrMessage.message_id
     );
@@ -12855,7 +12859,7 @@ async function processDepositShopeePay(ctx, amount) {
     );
   }
 
-  if (currentTime - lastRequestTime < requestInterval) {
+  if (currentTime - (global.userRequestTime?.[ctx.from?.id] || 0) < requestInterval) {
     return ctx.reply(
       "⚠️ *Terlalu banyak permintaan. Silahkan tunggu sebentar sebelum mencoba lagi.*",
       { parse_mode: "Markdown" }
@@ -12916,7 +12920,7 @@ async function processDepositShopeePay(ctx, amount) {
 
   global.pendingDeposits ??= {};
   global.depositState[userId] = true;
-  lastRequestTime = currentTime;
+  (global.userRequestTime = global.userRequestTime || {})[ctx.from?.id] = currentTime;
 
   // ==================== TIMEOUT ====================
 
@@ -13348,9 +13352,10 @@ function insertPendingDeposit(
         status,
         qr_message_id,
         method,
-        payment_ref
+        payment_ref,
+        total_payment
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         uniqueCode,
         userId,
@@ -13361,7 +13366,8 @@ function insertPendingDeposit(
         'pending',
         qrMessageId,
         method,
-        paymentRef
+        paymentRef,
+        finalAmount
       ],
       (err) => {
 
@@ -15935,7 +15941,7 @@ app.listen(port)
     // Keluar agar tidak rebutan token Telegram (409 Conflict) — keluhan Aji bot dobel.
     if (err?.code === 'EADDRINUSE') {
       logger.error('⛔ Port sudah dipakai instance lain — keluar untuk mencegah bot ganda.');
-      setTimeout(() => process.exit(1), 500);
+      process.exit(1);
     }
 
   });

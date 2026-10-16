@@ -267,6 +267,7 @@ function deductBalance(
   id,
   n
 ) {
+  if (!Number.isFinite(Number(n)) || Number(n) <= 0) return false;
 
   const u = getUser(id);
 
