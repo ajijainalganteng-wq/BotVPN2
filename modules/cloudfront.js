@@ -19,7 +19,7 @@
 
 const axios = require('axios');
 const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('./sellvpn.db');
+const db = new sqlite3.Database(require('path').join(__dirname, '..', 'sellvpn.db'));
 
 const CF_API_PORT = 5889;
 

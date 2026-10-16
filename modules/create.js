@@ -1,11 +1,10 @@
 const axios = require('axios');
 const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('./sellvpn.db');
+const db = new sqlite3.Database(require('path').join(__dirname, '..', 'sellvpn.db'));
 
 
 async function trialssh(username, password, exp, iplimit, serverId) {
-  console.log(`Creating SSH account for ${username} with expiry ${exp} days, IP limit ${iplimit}, and password ${password}`);
-
+  
   // Validasi username
   if (/\s/.test(username) || /[^a-zA-Z0-9]/.test(username)) {
     return {
@@ -564,8 +563,7 @@ https://${shadowsocksData.domain}:81/ss-${shadowsocksData.username}.txt
 }
 
 async function createssh(username, password, exp, iplimit, serverId) {
-  console.log(`Creating SSH account for ${username} with expiry ${exp} days, IP limit ${iplimit}, and password ${password}`);
-  
+    
   if (/\s/.test(username) || /[^a-zA-Z0-9]/.test(username)) {
     return '❌ Username tidak valid. Mohon gunakan hanya huruf dan angka tanpa spasi.';
   }
